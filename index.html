@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/p5.min.js"></script>
+</head>
+
+<body>
+
+    <section id="instructions">Press up arrow ↑ to rotate <br>
+        Press left arrow ← to move to the left <br>
+        Press right arrow → to move to the right <br>
+        Press down arrow ↓ to move down
+    </section>
+
+
+    <audio id="backgroundMusic" src="/Tetris.mp3" autoplay loop></audio>
+
+    <style>
+        body {
+            margin-left: 12rem;
+            margin-top: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/tetrisImage.webp');
+            background-size: contain;
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        #instructions {
+            color: white;
+            font-size: 15px;
+            margin: 0px 20px;
+            padding: 20px;
+            background: black;
+            opacity: 0.7;
+        }
+
+        canvas {
+            padding: 20px 100px; /* Establecemos el relleno de 100px a la izquierda y a la derecha */
+            background:black;
+         
+        }
+
+        
+    </style>
+
+    <script src="Board.js"></script>
+    <script src="Tetrimino.js"></script>
+
+    <script>
+
+        let backgroundImage;
+        const board_margin = 10
+        let reg_speed = 0 // to slow tetrimino movements
+        let fall_speed = 0
+        let made_lines = 0 // to set score
+
+
+       
+
+
+        // pieces fall authomatically
+
+        setInterval(() => {
+            if (millis() - fall_speed < 300) {
+                return
+            }
+            fall_speed = millis()
+            tetrimino.moveDOWN()
+        }, 500) // Adjusting the interval slightly for smoother gameplay; when player rotates the tetrimino, the fall_speed slows down
+
+     
+
+        // function for setting the initial properties of the object
+
+        function setup() {
+            createCanvas(600, 900)
+            board = new Board()
+            baseMapTetriminosCreation()
+            tetrimino = new Tetrimino()
+            resizeCanvas(board.width + 2 * board_margin, board.height + 2 * board_margin + 2 * board.block_side) // we multiply the margin per 2 so that the board is centered
+        }
+
+        
+
+        // function for drawing the board and background
+
+        function draw() {
+            clear() // margin background
+            drawScore()
+            board.draw()
+            tetrimino.draw()
+            keyEvents()
+        }
+
+
+        // setting score
+
+        function drawScore() {
+            push()
+            stroke("black") // leters border
+            strokeWeight("3")
+            fill("white")
+            text("Score: " + made_lines, board.position.x, board.position.y - board.block_side / 2)
+            pop()
+        }
+
+        // tetrimino movements
+
+        let reg_speed_limit = 100
+        function keyEvents() {
+
+            if (millis() - reg_speed < reg_speed_limit) {  // to slower keys speed
+                return
+            }
+            reg_speed_limit = 100
+            reg_speed = millis()
+
+            if (keyIsDown(LEFT_ARROW)) {
+                tetrimino.moveLEFT()
+                fall_speed = millis()
+            }
+            if (keyIsDown(RIGHT_ARROW)) {
+                tetrimino.moveRIGHT()
+                fall_speed = millis()
+            }
+            if (keyIsDown(DOWN_ARROW)) {
+                tetrimino.moveDOWN()
+                fall_speed = millis()
+            }
+            if (keyIsDown(UP_ARROW)) {
+                reg_speed_limit = 150
+                tetrimino.rotateClockWise()
+                fall_speed = millis()
+            }
+            if (keyIsDown(32)) {
+                reg_speed_limit = 200
+                tetrimino.putOnTheBack()
+                fall_speed = millis()
+            }
+
+        }
+
+
+    </script>
+</body>
+
+</html>
