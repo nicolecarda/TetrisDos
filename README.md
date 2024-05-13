@@ -18,7 +18,7 @@
 
 ## Project Description
 
-<p dir="auto">The classic Tetris game from 1987, made with Javascript's library <a href="https://p5js.org/" target="_blank">p5.js</a> and <a href="https://p5js.org/" target="_blank">Vite</a>. </p>
+<p dir="auto">The classic Tetris game from 1987, made with Javascript's library <a href="https://p5js.org/" target="_blank">p5.js</a> and <a href="https://vitejs.dev/" target="_blank">Vite</a>. </p>
 
 
 ## Project Status
